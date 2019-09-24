@@ -27,10 +27,11 @@ func main() {
 	problems := parseLines(lines)
 
 	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
-
 	result := 0
 
 	fmt.Printf("You have %s to answer each question! \n", time.Duration(*timeLimit)*time.Second)
+
+problemloop:
 	for i, p := range problems {
 		fmt.Printf("Problem #%d: %s ", i+1, p.question)
 		answerCh := make(chan string)
@@ -43,7 +44,7 @@ func main() {
 		select {
 		case <-timer.C:
 			fmt.Printf("You have made %d of %d \n", result, len(problems))
-			return
+			break problemloop
 		case userInput := <-answerCh:
 			if userInput == p.answer {
 				result++
